@@ -1,0 +1,32 @@
+<ion-view>
+<ion-header-bar class="bar-royal">
+<h1 class="title">Advocate App</h1>
+</ion-header-bar>
+<ion-content>
+<ul class="list">
+<li class="item center">
+    <p>Benefits you qualify for</p>
+</li>
+
+<ion-list>
+        <div ng-repeat="onePlan in showPlans | orderBy:'priority'">
+          <ion-item class="item-stable"
+                    ng-click="toggleGroup(onePlan)"
+                    ng-class="{active: isGroupShown(onePlan)}">
+            <div class="plan-icon"><i class="icon" ng-class="isGroupShown(onePlan) ? 'ion-minus' : 'ion-plus'"></i></div>
+            <div class="plan-text">
+            {{onePlan.text}}
+            </div>
+          </ion-item>
+          <div class="item-accordion plan-container"
+                    ng-show="isGroupShown(onePlan)" ng-bind-html="onePlan.description">
+          </div>
+        </div>
+        <div class="item">
+            <a class="button button-royal full-width" href="#/emailContent">
+        Continue
+    </a>
+        </div>
+      </ion-list>
+</ion-content>
+</ion-view>

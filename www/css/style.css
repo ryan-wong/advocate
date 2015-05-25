@@ -11,11 +11,67 @@
 	margin-left: auto;
 	margin-right: auto;
 }
-.welcome-button a{
+.welcome-button button{
  text-align: center;
  width: 100%;
 }
 
 .center{
 	text-align: center;
+}
+
+.group-text {
+    white-space: normal;
+}
+
+.full-width{
+    width: 100%;
+}
+
+.item-toggle div span{
+    display: block;
+    white-space: normal;
+}
+
+.yesno-button{
+    margin-top: 10px;
+    margin-bottom: 10px;
+    width: 90%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.list .item.item-accordion {
+  line-height: 38px;
+  padding-top: 0;
+  padding-bottom: 0;
+  transition: 0.09s all linear;
+}
+.list .item.item-accordion.ng-hide {
+  line-height: 0px;
+}
+.list .item.item-accordion.ng-hide-add,
+.list .item.item-accordion.ng-hide-remove {
+  display: block !important;
+}
+
+.plan-container{
+    width: 90%;
+    margin-left: auto;
+    margin-right: auto;
+}
+.plan-container ul{
+     list-style-type: circle !important;
+     padding-left: 30px;
+}
+
+.plan-icon {
+    width: 10%;
+    float: left;
+}
+
+.plan-text {
+    float:left;
+    width: 90%;
+    white-space: normal;
 }
