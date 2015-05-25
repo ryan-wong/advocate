@@ -1,0 +1,11 @@
+/* Empty. Add your own CSS if you like */
+.welcome-header{
+ text-align: center;
+ font-size: 18px;
+ margin-top: 25% !important;
+ margin-bottom: 30px;
+}
+
+.welcome-button a{
+ text-align: center;
+}
