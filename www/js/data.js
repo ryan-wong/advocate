@@ -44,7 +44,9 @@ var data = {
    "You must have worked and made at least one valid contribution (payment) to the CPP to qualify for a CPP retirement pension",
    "The standard age to begin receiving the pension is 65",
    "You can take a permanently reduced CPP retirement pension as early as age 60"
-   ]
+   ],
+   "question" : [1],
+   "oneAnswer" : [] 
    },{
     "id" : 2,
     "text" : "Old Age Security pension",
@@ -54,7 +56,9 @@ var data = {
    "65 years old or older",
    "Canadian citizen or a legal resident at the time we approve your Old Age Security pension application",
    "Resided in Canada for at least 10 years after turning 18"
-   ]
+   ],
+   "question" : [2],
+   "oneAnswer" : []
    }, {
     "id" : 3,
     "text" : "Ontario Drug Benefit Program",
@@ -70,7 +74,9 @@ var data = {
    "I am enrolled in the Home Care program",
    "I have high drugs costs relative to my income and am registered in the Trillium Drug Program",
    "I receive social assistance through Ontario Works or the sSupport Program."
-   ]
+   ],
+   "question" : [3, 4],
+   "oneAnswer" : [5, 6, 7, 8]
    }, {
     "id" : 4,
     "text" : "Guaranteed Income Supplement",
@@ -148,5 +154,31 @@ var data = {
     "be under the age of 65",
     "meet the CPP contribution requirements."
     ]
-    }]
+    }],
+
+  "questions":[{
+  "id" : 1,
+  "text" : "Have you worked and made at least one valid contribution (payment) to the CPP to qualify for a CPP retirement pension?"
+  },{
+  "id" : 2,
+  "text" : "Are you a Canadian citizen or a legal resident at the time we approve your Old Age Security pension application?"
+  }, {
+  "id" : 3,
+  "text" : "Are you eligible for ODB program benefits if you live in Ontario?"
+  }, {
+  "id" : 4,
+  "text" : "Do you have a valid Ontario health card?"
+  }, {
+  "id" : 5,
+  "text" : "Do you live in a Long-Term Care Home or a Home for Special Care?"
+  }, {
+  "id" : 6,
+  "text" : "Are you enrolled in the Home Care program?"
+  }, {
+  "id" : 7,
+  "text" : "Do you have high drugs costs relative to my income and am registered in the Trillium Drug Program?"
+  }, {
+  "id" : 8,
+  "text" : "Do you receive social assistance through Ontario Works or the sSupport Program?"
+  }]
 };

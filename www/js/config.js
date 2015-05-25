@@ -16,6 +16,15 @@ var question = {
   templateUrl: 'templates/question.html'
 };
 
+var specificQuestion = {
+  name: 'specificQuestion',
+  url: '/specificQuestion',
+  controller: 'SpecificQuestionCtrl',
+  secure: true,
+  cache: false,
+  templateUrl: 'templates/specificQuestion.html'
+};
+
 var result = {
   name: 'result',
   url: '/result',
@@ -37,5 +46,6 @@ var stateList = [
 welcome,
 question,
 result,
-emailContent
+emailContent,
+specificQuestion
 ];

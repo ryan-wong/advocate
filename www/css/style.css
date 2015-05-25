@@ -6,6 +6,16 @@
  margin-bottom: 30px;
 }
 
+.welcome-button {
+	width: 60%;
+	margin-left: auto;
+	margin-right: auto;
+}
 .welcome-button a{
  text-align: center;
+ width: 100%;
+}
+
+.center{
+	text-align: center;
 }

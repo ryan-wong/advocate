@@ -17,6 +17,7 @@ angular.module('advocate', ['ionic'])
     }
   });
   $rootScope.data = data;
+  $rootScope.category = [];
 })
 .config(function($provide) {
     $provide.decorator('$state', function($delegate, $stateParams) {
@@ -90,16 +91,58 @@ angular.module('advocate', ['ionic'])
 
 })
 .controller('WelcomeCtrl', ['$scope', WelcomeCtrl])
-.controller('QuestionCtrl', ['$scope', QuestionCtrl])
+.controller('QuestionCtrl', ['$scope', '$rootScope', '$state', QuestionCtrl])
 .controller('ResultCtrl', ['$scope', ResultCtrl])
+.controller('SpecificQuestionCtrl', ['$scope',  '$rootScope', '$state', SpecificQuestionCtrl])
 .controller('EmailContentCtrl', ['$scope', EmailContentCtrl])
 
 function WelcomeCtrl($s){
-
 }
 
-function QuestionCtrl($s){
+function SpecificQuestionCtrl($s, $r, $st){
+console.log($r.category);
+$s.plans = [];
+$r.category.map(function(oneCategory){
+  var categoryFound = $r.data.categories.filter(function(onePlan){
+  return onePlan.id == oneCategory;
+});
+  console.log('cat', categoryFound);
+  if (categoryFound.length > 0){
+    for (var i = 0; i < categoryFound[0]['plans'].length; i++) {
+      if ($s.plans.indexOf(categoryFound[0]['plans'][i]) < 0){
+        $s.plans.push(categoryFound[0]['plans'][i]);
+      }
+    };
+  }
+});
+console.log($s.plans);
+}
 
+function QuestionCtrl($s, $r, $st){
+$s.category = [
+false,
+false,
+false,
+false,
+false,
+false,
+false
+];
+$s.save = function(i){
+  $s.category[i-1] = !$s.category[i-1];
+};
+$s.continue = function(){
+  var hasOneCategory = false;
+  for (var i = 0; i < $s.category.length; i++){
+    if ($s.category[i]){
+      $r.category.push(i+1);
+      hasOneCategory = true;
+    }
+  }
+  if (hasOneCategory){
+    $st.transitionTo('specificQuestion',null, null, null);
+  }
+};
 }
 
 function ResultCtrl($s){
