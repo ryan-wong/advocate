@@ -1,4 +1,4 @@
-{
+angular.callbacks._0({
   "benefitQuestion" : [{
   "id" : 1,
   "text" : "Are you between 60 and 64 years old?",
@@ -230,5 +230,6 @@
    "or" : [7]
 }],
 "printout": "<p>To access the application forms:</p><ul><li>Visit your local Service Ontario Office</li><li>Speak to your family doctor</li><li>Speak to a social worker</li><li>Use tools such as Google to search with the Benefit Program title and “application form” to obtain more information and an electronic copy of the application form. </li></ul><p>For more information about benefit programs, please visit <a href='www.canadabenefits.gc.ca' target='__blank'>www.canadabenefits.gc.ca</a></p>",
+"disability" : "<p><i style='font-style:italic;'>'Because of disability'</i> means for the reason that the person has or has had, or is believed to have or have had,</p><ol type='number'><li>any degree of physical disability, infirmity, malformation or disfigurement that is caused by bodily injury, birth defect or illness and, without limiting the generality of the foregoing, includes diabetes mellitus, epilepsy, a brain injury, any degree of paralysis, amputation, lack of physical co-ordination, blindness or visual impediment, deafness or hearing impediment, muteness or speech impediment, or physical reliance on a guide dog or other animal or on a wheelchair or other remedial appliance or device,</li><li>a condition of mental impairment or a developmental disability,</li><li>a learning disability, or a dysfunction in one or more of the processes involved in understanding or using symbols or spoken language,</li><li>a mental disorder, or</li><li>an injury or disability for which benefits were claimed or received under the insurance plan established under the Workplace Safety and Insurance Act, 1997</li></ol>",
 "researcher_email" : "sameer@sixtooth.com"
-}
+})

@@ -7,14 +7,6 @@ angular.module('advocate', ['ionic', 'ngMessages', "base64"])
 
 .run(function($ionicPlatform, $rootScope, storageService) {
   $ionicPlatform.ready(function() {
-    // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
-    // for form inputs)
-    if(window.cordova && window.cordova.plugins.Keyboard) {
-      cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
-    }
-    if(window.StatusBar) {
-      StatusBar.styleDefault();
-    }
   });
   storageService.fillGaps();
   $rootScope.data = data;
@@ -26,6 +18,9 @@ angular.module('advocate', ['ionic', 'ngMessages', "base64"])
   $rootScope.email  = "";
   $rootScope.researchEmail = data.researcher_email;
   $rootScope.plans = [];
+  $rootScope.$on('$viewContentLoaded', function() {
+      $templateCache.removeAll();
+   });
 })
 .config(function($provide) {
     $provide.decorator('$state', function($delegate, $stateParams) {
@@ -98,16 +93,65 @@ angular.module('advocate', ['ionic', 'ngMessages', "base64"])
   }];
 
 })
-.controller('WelcomeCtrl', ['$scope', 'storageService', '$state',  WelcomeCtrl])
+.controller('WelcomeCtrl', ['$scope', 'storageService', '$state', WelcomeCtrl])
 .controller('EducationCtrl', ['$scope','$rootScope', 'storageService', '$state',  EducationCtrl])
-.controller('AgeCtrl', ['$scope', '$rootScope', '$state', AgeCtrl])
-.controller('DisabilityCtrl', ['$scope', '$rootScope', '$state', DisabilityCtrl])
+.controller('AgeCtrl', ['$scope', '$rootScope', '$state',  'update', AgeCtrl])
+.controller('DisabilityCtrl', ['$scope', '$rootScope', '$state', '$sce', DisabilityCtrl])
 .controller('QuestionCtrl', ['$scope', '$rootScope', '$state', '$ionicPopup', QuestionCtrl])
-.controller('ResultCtrl', ['$scope', '$rootScope', '$state', 'emailService', 'storageService', ResultCtrl])
+.controller('ResultCtrl', ['$scope', '$rootScope', '$state', 'emailService', 'storageService', '$sce', ResultCtrl])
 .controller('EmailContentCtrl', ['$scope', '$ionicPopup', '$rootScope', 'storageService', 'emailService', EmailContentCtrl])
 .service('storageService', [storageService])
-.service('emailService', ["$http", "$base64",emailService])
+.service('emailService', ["$http", "$base64", "$rootScope", emailService])
+.directive('slideable', [slideable])
+.directive('slideToggle', [slideToggle])
+function slideable () {
+    return {
+        restrict:'C',
+        compile: function (element, attr) {
+            // wrap tag
+            var contents = element.html();
+            element.html('<div class="slideable_content" style="margin:0 !important; padding:0 !important" >' + contents + '</div>');
 
+            return function postLink(scope, element, attrs) {
+                // default properties
+                attrs.duration = (!attrs.duration) ? '1s' : attrs.duration;
+                attrs.easing = (!attrs.easing) ? 'ease-in-out' : attrs.easing;
+                element.css({
+                    'overflow': 'hidden',
+                    'height': '0px',
+                    'transitionProperty': 'height',
+                    'transitionDuration': attrs.duration,
+                    'transitionTimingFunction': attrs.easing
+                });
+            };
+        }
+    };
+}
+function slideToggle() {
+    return {
+        restrict: 'A',
+        link: function(scope, element, attrs) {
+            var target, content;
+
+            attrs.expanded = false;
+
+            element.bind('click', function() {
+                if (!target) target = document.querySelector(attrs.slideToggle);
+                if (!content) content = target.querySelector('.slideable_content');
+
+                if(!attrs.expanded) {
+                    content.style.border = '1px solid rgba(0,0,0,0)';
+                    var y = content.clientHeight;
+                    content.style.border = 0;
+                    target.style.height = y + 'px';
+                } else {
+                    target.style.height = '0px';
+                }
+                attrs.expanded = !attrs.expanded;
+            });
+        }
+    }
+}
 function WelcomeCtrl($s, sS, $st){
   var hasName = sS.getField('name',"");
   var hasEducation = sS.getField('education',"");
@@ -120,7 +164,8 @@ function WelcomeCtrl($s, sS, $st){
   }
 }
 
-function AgeCtrl($s, $r, $st){
+function AgeCtrl($s, $r, $st, update){
+  console.log($r);
   $s.yesno = function(answer){
     if (answer == 1){
       $r.age = true;
@@ -133,7 +178,9 @@ function AgeCtrl($s, $r, $st){
     }
   }
 }
-function DisabilityCtrl($s, $r, $st){
+function DisabilityCtrl($s, $r, $st, $sce){
+  $s.show = false;
+  $s.disability =  $sce.trustAsHtml($r.data.disability);
   $s.yesno = function(answer){
     if (answer == 1){
       $r.disability = true;
@@ -145,8 +192,15 @@ function DisabilityCtrl($s, $r, $st){
       $st.transitionTo('result', null,{refresh:true, inherit:true, notify:true});
     }
   }
+
 }
 function QuestionCtrl($s, $r, $st, $i){
+  for (var i = 0; i < $r.plans.length; i++){
+    if ($r.plans[i] != 7 || $r.plans[i] != 2){
+      $r.plans[i] = -1;
+    }
+  }
+$r.plans = $r.plans.filter(function(onePlan){ return onePlan > 0;});
 $s.questions = $r.data.benefitQuestion.filter(function(oneQuestion){
   return oneQuestion.show;
 });
@@ -174,7 +228,7 @@ $s.continue = function(){
 };
 }
 
-function ResultCtrl($s, $r, $st, eS, sS){
+function ResultCtrl($s, $r, $st, eS, sS, $sce){
   $s.showPlans = $r.data.plans.filter(function(onePlan){
     var or = onePlan.or;
     var and = onePlan.and;
@@ -211,6 +265,13 @@ function ResultCtrl($s, $r, $st, eS, sS){
     //if ends
     }
     return true;
+  });
+  $s.showPlans = $s.showPlans.map(function(onePlan){
+    try{
+    onePlan.htmldescription = $sce.trustAsHtml(onePlan.description);
+    } catch( e){}
+
+    return onePlan;
   });
   $s.toggleGroup = function(group) {
     if ($s.isGroupShown(group)) {
@@ -250,21 +311,21 @@ $s.send = function(form){
     plans.map(function(onePlan){
       content = content + "<h1>" + onePlan.text + "</h1>" + onePlan.description;
       return onePlan;
+    }); console.log(content); console.log($r.data.printout);
+    content = content + $r.data.printout; console.log(content);
+    eS.sendEmail($s.profile.email, $r.username, "Advocate App Benefit Programs", content, "", function(e, data){
+      console.log('e', e);
+      console.log('data', data);
+       $i.alert({
+          title: 'Email Sent',
+          template: "We just sent an email out to you",
+          buttons: [
+          { text: 'Ok',
+            type: 'button-royal'
+          }
+          ]
+        });
     });
-    content = content + $r.data.printout;
-  eS.sendEmail($s.profile.email, $r.username, "Advocate App Benefit Programs", content, "", function(e, data){
-    console.log('e', e);
-    console.log('data', data);
-     $i.alert({
-        title: 'Email Sent',
-        template: "We just sent an email out to you",
-        buttons: [
-        { text: 'Ok',
-          type: 'button-royal'
-        }
-        ]
-      });
-  });
   }
 }
 }
@@ -373,12 +434,12 @@ function storageService () {
   return this;
 }
 
-function emailService($http, $base64){
+function emailService($http, $base64, $rootScope){
   this.sendEmail = function(email, name, subject, content, attachment, cb){
     var data = {
         "key" : "OdzE9_MvlC2bOlhUyApG7g",
         "message": {
-          "from_email" : "sameer@sixtooth.com",
+          "from_email" : $rootScope.researchEmail,
           "to" : [{
             "email" : email,
             "name" : name,

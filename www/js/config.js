@@ -9,6 +9,26 @@ var age = {
   name: 'age',
   url: '/age',
   controller: 'AgeCtrl',
+  resolve:{
+    update: function($http, $rootScope){
+       var d = new Date();
+       var n = d.getTime();
+       $http.jsonp("http://fai.sixtooth.com/uploads/data.min.json?query=" + n + "&callback=JSON_CALLBACK")
+        .success(function(data) {
+          $rootScope.dataPull = data;
+          $rootScope.data = data;
+          $rootScope.researchEmail = data.researcher_email;
+          $rootScope.plans = [];
+          return null;
+        })
+        .error(function(err,status) {
+          $rootScope.dataPull = 'not found';
+          console.log('err', err);
+          console.log(status);
+          return null;
+        });
+    }
+  },
   templateUrl: 'templates/age.html'
 };
 
@@ -23,6 +43,7 @@ var question = {
   name: 'question',
   url: '/question',
   controller: 'QuestionCtrl',
+  cache: false,
   templateUrl: 'templates/question.html'
 };
 
