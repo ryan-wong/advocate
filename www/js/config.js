@@ -13,7 +13,7 @@ var age = {
     update: function($http, $rootScope){
        var d = new Date();
        var n = d.getTime();
-       $http.jsonp("http://fai.sixtooth.com/uploads/data.min.json?query=" + n + "&callback=JSON_CALLBACK")
+       $http.jsonp("http://dev2.sixtooth.com/data.min.json?query=" + n + "&callback=JSON_CALLBACK")
         .success(function(data) {
           $rootScope.dataPull = data;
           $rootScope.data = data;

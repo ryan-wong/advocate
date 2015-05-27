@@ -1,32 +1,32 @@
 <ion-view>
-<ion-header-bar class="bar-royal">
-<h1 class="title center">Basic Information</h1>
+<ion-header-bar class="bar-royal peter-river">
+<h1 class="title center cloud">Advocate App</h1>
 </ion-header-bar>
-<ion-content>
+<ion-content class="bg-cloud has-header">
+<h3 class="center pt-3">Basic Information</h3>
 <form name="signupForm" novalidate="" ng-submit="signUp(signupForm)">
-  <h6>Please enter in some basic information about yourself</h6>
-<div class="list">
-  <label class="item item-input item-stacked-label">
-    <span class="input-label">Name</span>
-    <input type="text" name="name" ng-model="profile.name" ng-minlength="2"  required>
+
+<div class="list w90 mxa pt-1">
+  <label class="item item-input item-stacked-label noborder">
+    <input type="text" name="name" ng-model="profile.name" ng-minlength="2"  required placeholder="Name">
   </label>
-  <div class="form-errors" ng-messages="signupForm.name.$dirty && signupForm.name.$error">
-      <div class="form-error" ng-message="required">Your Last Name is Required.</div>
-      <div class="form-error" ng-message="minlength">Your Last Name cannot be that short.</div>
+  <div class="form-errors mxa w90 red" ng-messages="signupForm.name.$dirty && signupForm.name.$error">
+      <div class="form-error" ng-message="required">Your Name is Required.</div>
+      <div class="form-error" ng-message="minlength">Your Name cannot be that short.</div>
   </div>
-  <label class="item item-input item-select">
+  <label class="item item-input item-select noborder ">
     <div class="input-label">
       Education
     </div>
-    <select name="education" ng-model="profile.education">
+    <select name="education" ng-model="profile.education" class="">
       <option ng-repeat="oneOption in options" value="{{oneOption}}">{{oneOption}}</option>
     </select>
   </label>
-<div style="text-align:center;">
-  <button class="button bar-royal full-width">
+<label class="item item-input item-stacked-label noborder">
+  <button class="button peter-river full-width white">
     Save
   </button>
-</div>
+</label>
 </div>
 </form>
 </ion-content>
