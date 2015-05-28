@@ -292,10 +292,10 @@ function ResultCtrl($s, $r, $st, eS, sS, $sce){
                 "<p>Disability: " + (($r.disability)?"yes":"no") + "<br/>" +
                 "<p>Other: " + $r.plans.join(";") + "<br/>" ;
   var csv = $r.username + "," + $r.educationLevel + "," + $r.count + "," + (($r.age)?"yes":"no") + "," + (($r.disability)?"yes":"no") + ","  + $r.plans.join(";");
-  eS.sendEmail($r.data.researcher_email, "Research Report", "Research Report", content, csv, function(e, data){
-    console.log('e', e);
-    console.log('data', data);
-  });
+  // eS.sendEmail($r.data.researcher_email, "Research Report", "Research Report", content, csv, function(e, data){
+  //   console.log('e', e);
+  //   console.log('data', data);
+  // });
   sS.setField("planHolder", "object", $s.showPlans);
 }
 
