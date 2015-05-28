@@ -1,17 +1,22 @@
 /* Empty. Add your own CSS if you like */
 @font-face {
-    font-family: "Klinic Slab";
-    src: url("./KlinicSlabBook.otf") format("opentype") ;
+    font-family: 'KlinicSlabBook';
+    src: url('./KlinicSlabBook.eot');
+    src: url('./KlinicSlabBook.eot') format('embedded-opentype'),
+         url('./KlinicSlabBook.woff2') format('woff2'),
+         url('./KlinicSlabBook.woff') format('woff'),
+         url('./KlinicSlabBook.ttf') format('truetype'),
+         url('./KlinicSlabBook.svg#KlinicSlabBook') format('svg');
 }
 
 
 .welcome-header{
  text-align: center;
  font-size: 25px;
- margin-top: 25% !important;
+ margin-top: 15% !important;
  margin-bottom: 30px;
  color: #34495e;
- font-family: "Klinic Slab";
+ font-family: "KlinicSlabBook";
  font-style: italic;
 }
 .welcome-header span {
@@ -28,7 +33,7 @@
 .welcome-button button{
  text-align: center;
  width: 100%;
- font-family: "Klinic Slab";
+ font-family: "KlinicSlabBook";
  font-size: 25px;
 }
 
@@ -42,7 +47,7 @@
 
 .full-width{
     width: 100%;
-    font-family: "Klinic Slab";
+    font-family: "KlinicSlabBook";
     font-size: 25px;
     font-style:italic;
     margin: auto;
@@ -82,10 +87,12 @@
     margin-right: auto;
     padding-top: 10px;
     padding-bottom: 30px;
+    font-family: "KlinicSlabBook";
 }
 .plan-container ul{
      list-style-type: circle !important;
      padding-left: 30px;
+     font-family: "KlinicSlabBook";
 }
 
 .plan-icon {
@@ -93,9 +100,14 @@
     float: left;
 }
 
+.plan-title {
+  font-family: "KlinicSlabBook";
+  font-style: italic;
+}
 .plan-text {
     float:left;
     width: 90%;
+    font-family: "KlinicSlabBook";
     white-space: normal;
 }
 
@@ -126,7 +138,7 @@ ol {
 
 .cloud {
   color: #ecf0f1 !important;
-  font-family: "Klinic Slab";
+  font-family: "KlinicSlabBook";
   font-style: italic;
 }
 
@@ -175,7 +187,7 @@ ol {
 }
 .pt-3{
   padding-top: 48px;
-  font-family: "Klinic Slab";
+  font-family: "KlinicSlabBook";
   font-style: italic;
   color: #34495e;
 
@@ -189,7 +201,7 @@ ol {
 }
 
 span{
-  font-family: "Klinic Slab";
+  font-family: "KlinicSlabBook";
   font-size: 16px;
 }
 .input-label{
@@ -206,4 +218,34 @@ span{
 }
 ::-webkit-input-placeholder {
    padding-left: 10px;
+   font-size: 16px;
+}
+
+select{
+  font-family: "KlinicSlabBook";
+}
+
+.light-grey{
+  color: #b3b3b3;
+}
+
+.bg-white{
+  background-color: white;
+}
+
+.py0 {
+  padding-top: 0px;
+  padding-bottom: 0px;
+}
+
+.mb1{
+  margin-bottom: 10px;
+}
+
+.mb4{
+  margin-bottom: 40px;
+}
+
+.disability{
+  font-family: "KlinicSlabBook" !important;
 }

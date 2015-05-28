@@ -1,30 +1,35 @@
-<ion-view>
-<ion-header-bar class="bar-royal">
-<h1 class="title center">Advocate App</h1>
+<ion-view backbutton>
+<ion-header-bar class="bar-royal"  align-title="center">
+<a class="button" href="#/age">Restart</a>
+<h1 class="title disability">Advocate App</h1>
 </ion-header-bar>
-<ion-content>
+<ion-content class="bg-cloud" scroll="false">
 <h1 class="welcome-header">Email Content</h1>
 <form name="signupForm" novalidate="" ng-submit="send(signupForm)">
-  <h6>Thank you for completing our survey. We can send you a copy of your benefits if you enter your email.</h6>
+  <h6 class="disability">Thank you for completing our survey. We can send you a copy of your benefits if you enter your email.</h6>
 <div class="list">
-  <div class="emailinput">
-  <label class="item item-input item-label">
+  <div class="emailinput bg-white">
+  <label class="item item-input item-stacked-label noborder py0 mb1">
+    <input type="email" name="email" ng-model="profile.email" ng-minlength="2"  required placeholder="Email">
+  </label>
+  <!-- <label class="item item-input item-label">
     <span class="input-label">Email</span>
     <input type="email" name="email" ng-model="profile.email" ng-minlength="2"  required>
-  </label>
+  </label> -->
 </div>
-  <div class="form-errors" ng-messages="signupForm.email.$dirty && signupForm.email.$error">
+  <div class="form-errors mxa w90 red" ng-messages="signupForm.email.$dirty && signupForm.email.$error">
     <div class="form-error" ng-message="required">Your Email is Required.</div>
     <div class="form-error" ng-message="minlength">Your Email cannot be that short.</div>
     <div class="form-error" ng-message="email">That's not a valid Email</div>
   </div>
-<div style="text-align:center;">
+<div class="mb4" style="text-align:center;">
   <div class="emailbutton">
   <button class="button button-royal full-width">
     Send Email
   </button>
- </div> 
+ </div>
 </div>
+
 </div>
 </form>
 </ion-content>

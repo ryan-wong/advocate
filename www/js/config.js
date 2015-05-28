@@ -9,26 +9,7 @@ var age = {
   name: 'age',
   url: '/age',
   controller: 'AgeCtrl',
-  resolve:{
-    update: function($http, $rootScope){
-       var d = new Date();
-       var n = d.getTime();
-       $http.jsonp("http://dev2.sixtooth.com/data.min.json?query=" + n + "&callback=JSON_CALLBACK")
-        .success(function(data) {
-          $rootScope.dataPull = data;
-          $rootScope.data = data;
-          $rootScope.researchEmail = data.researcher_email;
-          $rootScope.plans = [];
-          return null;
-        })
-        .error(function(err,status) {
-          $rootScope.dataPull = 'not found';
-          console.log('err', err);
-          console.log(status);
-          return null;
-        });
-    }
-  },
+  cache: false,
   templateUrl: 'templates/age.html'
 };
 

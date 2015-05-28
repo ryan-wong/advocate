@@ -3,37 +3,44 @@ var data = {
   "id" : 1,
   "text" : "Are you between 60 and 64 years old?",
   "checked" : false,
-  "show": true
+  "show": true,
+  "tag": "60-64"
 },{
   "id" : 2,
   "text" : "Do you have a disability?",
   "checked" : false,
-  "show": true
+  "show": true,
+  "tag": "disability"
 },{
   "id" : 3,
   "text" : "Are you a Parent of child under 18?",
   "checked" : false,
-  "show": true
+  "show": true,
+  "tag": "parent child<18"
 },{
   "id" : 4,
   "text" : "Are you a Full Time Student?",
   "checked" : false,
-  "show": true
+  "show": true,
+  "tag": "fulltime student"
 },{
   "id" : 5,
   "text" : "Do you have First Nation Status?",
   "checked" : false,
-  "show": true
+  "show": true,
+  "tag": "first nation"
 },{
   "id" : 6,
-  "text" : "Do you have Financial Need?",
+  "text" : "Do you have Financial Assistance?",
   "checked" : false,
-  "show": true
+  "show": true,
+  "tag": "financial need"
 },{
   "id" : 7,
-  "text" : "Are you over 65?",
+  "text" : "Are you 65 or over?",
   "checked" : false,
-  "show": false
+  "show": false,
+  "tag": "65+"
 }],
 "plans": [{
    "text" : "Canada Pension Plan",
@@ -231,5 +238,5 @@ var data = {
 }],
 "printout": "<p>To access the application forms:</p><ul><li>Visit your local Service Ontario Office</li><li>Speak to your family doctor</li><li>Speak to a social worker</li><li>Use tools such as Google to search with the Benefit Program title and “application form” to obtain more information and an electronic copy of the application form. </li></ul><p>For more information about benefit programs, please visit <a href='www.canadabenefits.gc.ca' target='__blank'>www.canadabenefits.gc.ca</a></p>",
 "disability" : "<p><i style='font-style:italic;'>'Because of disability'</i> means for the reason that the person has or has had, or is believed to have or have had,</p><ol type='number'><li>any degree of physical disability, infirmity, malformation or disfigurement that is caused by bodily injury, birth defect or illness and, without limiting the generality of the foregoing, includes diabetes mellitus, epilepsy, a brain injury, any degree of paralysis, amputation, lack of physical co-ordination, blindness or visual impediment, deafness or hearing impediment, muteness or speech impediment, or physical reliance on a guide dog or other animal or on a wheelchair or other remedial appliance or device,</li><li>a condition of mental impairment or a developmental disability,</li><li>a learning disability, or a dysfunction in one or more of the processes involved in understanding or using symbols or spoken language,</li><li>a mental disorder, or</li><li>an injury or disability for which benefits were claimed or received under the insurance plan established under the Workplace Safety and Insurance Act, 1997</li></ol>",
-"researcher_email" : "sameer@sixtooth.com"
+"researcher_email" : "advocatestudy@gmail.com"
 };

@@ -1,8 +1,8 @@
-<ion-view>
-<ion-header-bar class="bar-royal peter-river">
-<h1 class="title center cloud">Advocate App</h1>
+<ion-view backbutton>
+<ion-header-bar class="bar-royal peter-river"  align-title="center">
+<h1 class="title cloud disability">Advocate App</h1>
 </ion-header-bar>
-<ion-content class="bg-cloud has-header">
+<ion-content class="bg-cloud has-header" scroll="false">
 <h3 class="center pt-3">Basic Information</h3>
 <form name="signupForm" novalidate="" ng-submit="signUp(signupForm)">
 
@@ -15,10 +15,10 @@
       <div class="form-error" ng-message="minlength">Your Name cannot be that short.</div>
   </div>
   <label class="item item-input item-select noborder ">
-    <div class="input-label">
+    <div class="input-label light-grey">
       Education
     </div>
-    <select name="education" ng-model="profile.education" class="">
+    <select name="education" ng-model="profile.education" class="" style="font-family: 'KlinicSlabBook';">
       <option ng-repeat="oneOption in options" value="{{oneOption}}">{{oneOption}}</option>
     </select>
   </label>

@@ -5,7 +5,7 @@
 // the 2nd parameter is an array of 'requires'
 angular.module('advocate', ['ionic', 'ngMessages', "base64"])
 
-.run(function($ionicPlatform, $rootScope, storageService) {
+.run(function($ionicPlatform, $rootScope, storageService, $http) {
   $ionicPlatform.ready(function() {
   });
   storageService.fillGaps();
@@ -21,6 +21,21 @@ angular.module('advocate', ['ionic', 'ngMessages', "base64"])
   $rootScope.$on('$viewContentLoaded', function() {
       $templateCache.removeAll();
    });
+  var d = new Date();
+   var n = d.getTime();
+    // $http.jsonp("http://fai.sixtooth.com/uploads/data.min.json?query=" + n + "&callback=JSON_CALLBACK")
+    $http.jsonp("http://dev2.sixtooth.com/data.min.json?query=" + n + "&callback=JSON_CALLBACK")
+    .success(function(data) {
+      $rootScope.dataPull = data;
+      $rootScope.data = data;
+      $rootScope.researchEmail = data.researcher_email;
+      $rootScope.plans = [];
+      return data;
+    })
+    .error(function(err,status) {
+      $rootScope.dataPull = 'not found';
+      return $rootScope.data;
+    });
 })
 .config(function($provide) {
     $provide.decorator('$state', function($delegate, $stateParams) {
@@ -47,6 +62,9 @@ angular.module('advocate', ['ionic', 'ngMessages', "base64"])
   $urlRouterProvider.otherwise('/welcome');
 
 }])
+.config(function($ionicConfigProvider) {
+  $ionicConfigProvider.views.swipeBackEnabled(false);
+})
 .config(function($httpProvider){
  // Use x-www-form-urlencoded Content-Type
   $httpProvider.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=utf-8';
@@ -95,15 +113,18 @@ angular.module('advocate', ['ionic', 'ngMessages', "base64"])
 })
 .controller('WelcomeCtrl', ['$scope', 'storageService', '$state', WelcomeCtrl])
 .controller('EducationCtrl', ['$scope','$rootScope', 'storageService', '$state',  EducationCtrl])
-.controller('AgeCtrl', ['$scope', '$rootScope', '$state',  'update', AgeCtrl])
+.controller('AgeCtrl', ['$scope', '$rootScope', '$state', 'emailQueue', AgeCtrl])
 .controller('DisabilityCtrl', ['$scope', '$rootScope', '$state', '$sce', DisabilityCtrl])
 .controller('QuestionCtrl', ['$scope', '$rootScope', '$state', '$ionicPopup', QuestionCtrl])
-.controller('ResultCtrl', ['$scope', '$rootScope', '$state', 'emailService', 'storageService', '$sce', ResultCtrl])
-.controller('EmailContentCtrl', ['$scope', '$ionicPopup', '$rootScope', 'storageService', 'emailService', EmailContentCtrl])
+.controller('ResultCtrl', ['$scope', '$rootScope', '$state', 'emailQueue', 'storageService', '$sce', ResultCtrl])
+.controller('EmailContentCtrl', ['$scope', '$ionicPopup', '$rootScope', 'storageService', 'emailQueue', EmailContentCtrl])
 .service('storageService', [storageService])
-.service('emailService', ["$http", "$base64", "$rootScope", emailService])
+.service('emailService', ["$http", emailService])
+.service('emailQueue', ["$base64", "$rootScope", 'storageService', 'APIInterceptor', 'emailService', emailQueue])
+.service('APIInterceptor', ['$ionicPopup', '$ionicPlatform', APIInterceptor])
 .directive('slideable', [slideable])
 .directive('slideToggle', [slideToggle])
+.directive('backbutton', ['$ionicGesture', backbutton])
 function slideable () {
     return {
         restrict:'C',
@@ -152,6 +173,19 @@ function slideToggle() {
         }
     }
 }
+function backbutton($ionicGesture){
+    return {
+      restrict: 'A',
+
+      link: function(scope, element, attrs) {
+        $ionicGesture.on('swiperight', function(event) {
+        console.log('Got swiped!');
+        event.preventDefault();
+
+      }, element);
+      }
+    };
+}
 function WelcomeCtrl($s, sS, $st){
   var hasName = sS.getField('name',"");
   var hasEducation = sS.getField('education',"");
@@ -164,8 +198,8 @@ function WelcomeCtrl($s, sS, $st){
   }
 }
 
-function AgeCtrl($s, $r, $st, update){
-  console.log($r);
+function AgeCtrl($s, $r, $st, eQ){
+  $s.question = $r.data.benefitQuestion[6].text;
   $s.yesno = function(answer){
     if (answer == 1){
       $r.age = true;
@@ -177,6 +211,7 @@ function AgeCtrl($s, $r, $st, update){
       $st.transitionTo('question', null,{refresh:true, inherit:true, notify:true});
     }
   }
+  eQ.clearQueue();
 }
 function DisabilityCtrl($s, $r, $st, $sce){
   $s.show = false;
@@ -228,7 +263,7 @@ $s.continue = function(){
 };
 }
 
-function ResultCtrl($s, $r, $st, eS, sS, $sce){
+function ResultCtrl($s, $r, $st, eQ, sS, $sce){
   $s.showPlans = $r.data.plans.filter(function(onePlan){
     var or = onePlan.or;
     var and = onePlan.and;
@@ -284,22 +319,25 @@ function ResultCtrl($s, $r, $st, eS, sS, $sce){
     return $s.shownGroup === group;
   };
   $r.count++;
+  var planList = $r.plans.map(function(onePlan){
+    var questionFound = $r.data.benefitQuestion.filter(function(oneQuestion){ return oneQuestion.id == onePlan;});
+    return questionFound[0].tag;
+  }).join(',');
+
   sS.setField('count', 'integer', $r.count);
   var content = "<p>Name: " + $r.username + "<br/>" +
                 "<p>Education: " + $r.educationLevel + "<br/>" +
                 "<p>Count: " + $r.count + "<br/>" +
-                "<p>Age > 65: " + (($r.age)?"yes":"no") + "<br/>" +
-                "<p>Disability: " + (($r.disability)?"yes":"no") + "<br/>" +
-                "<p>Other: " + $r.plans.join(";") + "<br/>" ;
-  var csv = $r.username + "," + $r.educationLevel + "," + $r.count + "," + (($r.age)?"yes":"no") + "," + (($r.disability)?"yes":"no") + ","  + $r.plans.join(";");
-  // eS.sendEmail($r.data.researcher_email, "Research Report", "Research Report", content, csv, function(e, data){
-  //   console.log('e', e);
-  //   console.log('data', data);
-  // });
+                "<p>Answers: " + planList + "<br/>" ;
+  var csv = $r.username + "," + $r.educationLevel + "," + $r.count + ","  + planList;
+  eQ.addQueue($r.data.researcher_email, "Research Report", "Research Report", content, csv, 'research', function(e, data){
+    console.log('e', e);
+    console.log('data', data);
+  });
   sS.setField("planHolder", "object", $s.showPlans);
 }
 
-function EmailContentCtrl($s, $i, $r, sS, eS ){
+function EmailContentCtrl($s, $i, $r, sS, eQ ){
 $s.profile = {
   email: ""
 };
@@ -311,11 +349,22 @@ $s.send = function(form){
     plans.map(function(onePlan){
       content = content + "<h1>" + onePlan.text + "</h1>" + onePlan.description;
       return onePlan;
-    }); console.log(content); console.log($r.data.printout);
-    content = content + $r.data.printout; console.log(content);
-    eS.sendEmail($s.profile.email, $r.username, "Advocate App Benefit Programs", content, "", function(e, data){
+    });
+    content = $r.data.printout + content;
+    eQ.addQueue($s.profile.email, $r.username, "Advocate App Benefit Programs", content, "", 'personal',function(e, data){
       console.log('e', e);
       console.log('data', data);
+      if (data.internet != undefined){
+       $i.alert({
+          title: 'No Internet',
+          template: "You do not have internet right now. We will send your email when you do.",
+          buttons: [
+          { text: 'Ok',
+            type: 'button-royal'
+          }
+          ]
+        });
+      }else{
        $i.alert({
           title: 'Email Sent',
           template: "We just sent an email out to you",
@@ -325,6 +374,7 @@ $s.send = function(form){
           }
           ]
         });
+      }
     });
   }
 }
@@ -332,15 +382,17 @@ $s.send = function(form){
 
 function EducationCtrl($s, $r, sS, $st){
 $s.options = [
-'Public School',
-'High School',
-'College',
-'University',
-'Graduate School'
+'Medical Student',
+'Junior Resident',
+'Senior Resident',
+'Chief Resident',
+'Staff Physician',
+'Physician Assistant/Student',
+'Social Worker'
 ];
 $s.profile = {
   name: "",
-  education:"Public School"
+  education:"Medical Student"
 };
 
 $s.signUp = function(form){
@@ -362,7 +414,9 @@ function storageService () {
    education:{type: 'string', value:""},
    count:{type: 'integer', value:0},
    data: {type: 'object', value: ""},
-   planHolder: {type: 'object', value: ""}
+   planHolder: {type: 'object', value: ""},
+   queueResearch: {type: 'array', value: [] },
+   queueEmail: {type: 'array', value: []}
   }
  };
   var _keys = Object.keys(storageList.fields);
@@ -406,6 +460,13 @@ function storageService () {
     }else if (type =='integer'){
       result = Number(result);
     }
+    if (type=='array'){
+      var result = JSON.parse(localStorage.getItem(namespace + field));
+      result.push(value);
+    }
+    if (type=='reset'){
+      result = value;
+    }
       window.localStorage.setItem(namespace + field, JSON.stringify(result));
       return result;
   };
@@ -434,10 +495,28 @@ function storageService () {
   return this;
 }
 
-function emailService($http, $base64, $rootScope){
-  this.sendEmail = function(email, name, subject, content, attachment, cb){
+function emailService($http){
+  this.sendEmail = function(data, cb){
+  $http({
+      method: 'POST',
+      url: "https://mandrillapp.com/api/1.0/messages/send.json",
+      data: data
+    })
+    .success(function(data) {
+      cb(null, data);
+    })
+    .error(function(err,status) {
+      cb(err);
+    });
+  }
+  return this;
+}
+
+function emailQueue($base64, $rootScope, storageService, APIInterceptor, emailService){
+  this.addQueue = function(email, name, subject, content, attachment, type, cb){
     var data = {
         "key" : "OdzE9_MvlC2bOlhUyApG7g",
+        // "key" : "gV0U28t3tBBrCZo0Dklngg",
         "message": {
           "from_email" : $rootScope.researchEmail,
           "to" : [{
@@ -458,17 +537,49 @@ function emailService($http, $base64, $rootScope){
         }
       ];
     }
-  $http({
-      method: 'POST',
-      url: "https://mandrillapp.com/api/1.0/messages/send.json",
-      data: data
-    })
-    .success(function(data) {
-      cb(null, data);
-    })
-    .error(function(err,status) {
-      cb(err);
-    });
-  }
+    console.log('offline', APIInterceptor.isOffline());
+    if (APIInterceptor.isOffline()){
+      console.log('offline');
+      if (type == 'research'){
+        storageService.setField('queueResearch', 'array', data);
+      } else{
+        storageService.setField('queueEmail', 'array', data);
+      }
+      cb(null,{"message": "Saved to queue", 'internet': false});
+      return true;
+    }else{
+      return emailService.sendEmail(data,cb);
+    }
+  };
+  this.clearQueue = function(){
+    var research = storageService.getField('queueResearch',[]);
+    var emails = storageService.getField('queueEmail',[]);
+    if (!APIInterceptor.isOffline()){
+      console.log('offline');
+      if (research.length > 0){
+        for (var i = 0; i < research.length; i++){
+          emailService.sendEmail(research[i],function(e, d){console.log(i, d);});
+        }
+        storageService.setField('queueResearch', 'reset', []);
+      }
+      if (emails.length > 0){
+        for (var i = 0; i < emails.length; i++){
+          emailService.sendEmail(emails[i],function(e, d){console.log(i, d);});
+        }
+        storageService.setField('queueEmail', 'reset', []);
+      }
+    }
+  };
   return this;
+}
+
+function APIInterceptor($ionicPopup, $ionicPlatform) {
+    this.isOffline = function() {
+          if(window.Connection) {
+              if(navigator.connection.type == Connection.NONE) {
+                return true;
+              }
+          }
+          return false;
+    };
 }
